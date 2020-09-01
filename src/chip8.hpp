@@ -15,4 +15,5 @@ class Chip8{
         void Load(std::string filename);
     public:
         Chip8(std::string filename); 
+        void Cycle();
 };

@@ -19,4 +19,14 @@ void Chip8::Load(std::string filename){
         i++;
     }
     file.close();
+    i=150;
+    while(i--){
+        Cycle();
+    }
+}
+
+void Chip8::Cycle(){
+
+    uint16_t opcode= memory.getMemory(cpu.getPC()) << 8 | memory.getMemory(cpu.getPC()+1);
+    cpu.setPC(cpu.getPC()+2);
 }

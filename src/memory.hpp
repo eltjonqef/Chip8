@@ -12,4 +12,5 @@ class Memory{
     public:
         Memory();
         void setMemory(int index, uint8_t value);
+        uint8_t getMemory(int index);
 };

@@ -1,10 +1,13 @@
 #pragma once
 #include <stdint.h>
 #include <string.h>
-
+#include <iostream>
+#include <allegro5/allegro.h>
 class Display{
 
     private:
+        //ALLEGRO_DISPLAY* display;
+        //ALLEGRO_BITMAP* bitmap;
         uint8_t graphics_buffer[32*64];
         uint8_t fonts[80]={
             0xF0, 0x90, 0x90, 0x90, 0xF0,
