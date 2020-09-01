@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <vector>
-typedef void (*firstBit)(uint16_t);
+
 
 class CPU{
 
@@ -23,10 +23,13 @@ class CPU{
 
         //Last 4 bits of instruction with first 4 bits=0
         void  _00E0(),  _00EE();
+
+        
         
     public:
         CPU();
         void setPC(uint16_t pc);
         uint16_t getPC();
-        std::vector<void> opcodes;
+        typedef void (CPU::*firstBit)(uint16_t);
+        firstBit opcodes[16];
 };

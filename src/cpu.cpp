@@ -8,22 +8,22 @@ CPU::CPU(){
     delay_timer=0x0;
     pc=0x200;
     sp=0x0;
-    opcodes.push_back(_0);
-    opcodes.push_back(_1);
-    opcodes.push_back(_2);
-    opcodes.push_back(_3);
-    opcodes.push_back(_4);
-    opcodes.push_back(_5);
-    opcodes.push_back(_6);
-    opcodes.push_back(_7);
-    opcodes.push_back(_8);
-    opcodes.push_back(_9);
-    opcodes.push_back(_A);
-    opcodes.push_back(_B);
-    opcodes.push_back(_C);
-    opcodes.push_back(_D);
-    opcodes.push_back(_E);
-    opcodes.push_back(_F);
+    opcodes[0]=&CPU::_0;
+    opcodes[1]=&CPU::_1;
+    opcodes[2]=&CPU::_2;
+    opcodes[3]=&CPU::_3;
+    opcodes[4]=&CPU::_4;
+    opcodes[5]=&CPU::_5;
+    opcodes[6]=&CPU::_6;
+    opcodes[7]=&CPU::_7;
+    opcodes[8]=&CPU::_8;
+    opcodes[9]=&CPU::_9;
+    opcodes[10]=&CPU::_A;
+    opcodes[11]=&CPU::_B;
+    opcodes[12]=&CPU::_C;
+    opcodes[13]=&CPU::_D;
+    opcodes[14]=&CPU::_E;
+    opcodes[15]=&CPU::_F;
 }
 
 void CPU::setPC(uint16_t _pc){
@@ -37,15 +37,15 @@ uint16_t CPU::getPC(){
 
 void CPU::_0(uint16_t opcode){
 
-    uint8_t ___X=opcode & 0x0F;
-    if(___X==0x0){ //CLS
+    switch(opcode & 0x0F){
+        case 0x0: //CLS
+            break;
 
-    }
-    else if(___X==0xE){ //RET
+        case 0x0E: //RET
+            break;
         
-    }
-    else{ //Unknown Instruction
-        
+        default: //Unknown Instruction
+            break;
     }
 }
 
@@ -91,35 +91,70 @@ void CPU::_7(uint16_t opcode){ //ADD V_X__+=__XX
 
 void CPU::_8(uint16_t opcode){ 
 
-    uint8_t ___X=opcode & 0x000F;
-    if(___X==0){
+    switch(opcode & 0x000F){
+        case 0:
+            break;
 
-    }
-    else if(___X==1){
+        case 1:
+            break;
 
-    }
-    else if(___X==2){
+        case 2:
+            break;
 
-    }
-    else if(___X==3){
+        case 3:
+            break;
 
-    }
-    else if(___X==4){
+        case 4:
+            break;
+
+        case 5:
+            break;
+
+        case 6:
+            break;
+
+        case 7:
+            break;
+
+        case 14:
+            break;
         
+        default: //Unknown Instruction
+            break;
     }
-    else if(___X==5){
-        
-    }
-    else if(___X==6){
-        
-    }
-    else if(___X==7){
-        
-    }
-    else if(___X==E){
-        
-    }
-    else{
-        
-    }
+}
+
+void CPU::_9(uint16_t opcode){
+
+   
+}
+
+void CPU::_A(uint16_t opcode){
+
+   
+}
+
+void CPU::_B(uint16_t opcode){
+
+   
+}
+
+void CPU::_C(uint16_t opcode){
+
+   
+}
+
+void CPU::_D(uint16_t opcode){
+
+   
+}
+
+void CPU::_E(uint16_t opcode){
+
+   
+}
+
+void CPU::_F(uint16_t opcode){
+
+   
 }
