@@ -7,6 +7,22 @@ Chip8::Chip8(std::string filename){
         memory.setMemory(i, display.getFont(i));
     }
     Load(filename);
+    opcodes[0]=&Chip8::_0;
+    opcodes[1]=&Chip8::_1;
+    opcodes[2]=&Chip8::_2;
+    opcodes[3]=&Chip8::_3;
+    opcodes[4]=&Chip8::_4;
+    opcodes[5]=&Chip8::_5;
+    opcodes[6]=&Chip8::_6;
+    opcodes[7]=&Chip8::_7;
+    opcodes[8]=&Chip8::_8;
+    opcodes[9]=&Chip8::_9;
+    opcodes[10]=&Chip8::_A;
+    opcodes[11]=&Chip8::_B;
+    opcodes[12]=&Chip8::_C;
+    opcodes[13]=&Chip8::_D;
+    opcodes[14]=&Chip8::_E;
+    opcodes[15]=&Chip8::_F;
 }
 
 void Chip8::Load(std::string filename){
@@ -19,14 +35,169 @@ void Chip8::Load(std::string filename){
         i++;
     }
     file.close();
-    i=150;
-    while(i--){
-        Cycle();
-    }
+    Cycle();
 }
 
 void Chip8::Cycle(){
 
     uint16_t opcode= memory.getMemory(cpu.getPC()) << 8 | memory.getMemory(cpu.getPC()+1);
+    executeOpcode(opcode);
     cpu.setPC(cpu.getPC()+2);
+}
+
+void Chip8::executeOpcode(uint16_t opcode){
+    (this->*opcodes[(opcode & 0xF000) >>12])(opcode & 0x0FFF);
+}
+
+void Chip8::_0(uint16_t _12LSb){
+
+    switch(_12LSb & 0x000F){
+        case 0x0:
+            std::cout<<"Clear Screen"<<std::endl;
+            display.ClearDisplay();
+            cpu.setPC(cpu.getPC()+2);
+            break;
+
+        case 0xE:
+            std::cout<<"Return"<<std::endl;
+            cpu.setSP(cpu.getSP()-1);
+            cpu.setPC(memory.getStack(cpu.getSP()));
+            cpu.setPC(cpu.getPC()+2);
+            break;
+        
+        default:
+            std::cout<<"Unknown Instruction"<<std::endl;
+            break;
+    }
+}
+
+void Chip8::_1(uint16_t _12LSb){
+
+    std::cout<<"Jump"<<std::endl;
+    cpu.setPC(_12LSb);
+}
+
+void Chip8::_2(uint16_t _12LSb){
+
+    std::cout<<"Call"<<std::endl;
+    cpu.setSP(cpu.getSP()+1);
+    memory.setStack(cpu.getSP(), cpu.getPC());
+    cpu.setPC(_12LSb);
+}
+
+void Chip8::_3(uint16_t _12LSb){
+
+    std::cout<<"Skip if equal (byte)"<<std::endl;
+    if(((_12LSb & 0x0F00) >> 8)==(_12LSb & 0x00FF)){
+        cpu.setPC(cpu.getPC()+4);
+    }
+    else{
+        cpu.setPC(cpu.getPC()+2);
+    }
+}
+
+void Chip8::_4(uint16_t _12LSb){
+
+    std::cout<<"Skip if not equal (byte)"<<std::endl;
+    if(((_12LSb & 0x0F00) >> 8)!=(_12LSb & 0x00FF)){
+        cpu.setPC(cpu.getPC()+4);
+    }
+    else{
+        cpu.setPC(cpu.getPC()+2);
+    }
+}
+
+void Chip8::_5(uint16_t _12LSb){
+
+    std::cout<<"Skip if not equal (register)"<<std::endl;
+    if(((_12LSb & 0x0F00) >> 8)!=((_12LSb & 0x00F0) >> 4)){
+        cpu.setPC(cpu.getPC()+4);
+    }
+    else{
+        cpu.setPC(cpu.getPC()+2);
+    }
+}
+
+void Chip8::_6(uint16_t _12LSb){
+
+    std::cout<<"Load"<<_12LSb<<std::endl;
+    cpu.setRegister((_12LSb & 0x0F00)>>8, _12LSb & 0x00FF);
+    cpu.setPC(cpu.getPC()+2);
+}
+
+void Chip8::_7(uint16_t _12LSb){
+
+    std::cout<<"Add (byte)"<<_12LSb<<std::endl;
+    cpu.setRegister((_12LSb & 0x0F00)>>8, cpu.getRegister((_12LSb & 0x0F00)>>8)+(_12LSb & 0x00FF));
+    cpu.setPC(cpu.getPC()+2);
+}
+
+void Chip8::_8(uint16_t _12LSb){ 
+
+    switch(_12LSb & 0x000F){
+        case 0:
+            break;
+
+        case 1:
+            break;
+
+        case 2:
+            break;
+
+        case 3:
+            break;
+
+        case 4:
+            break;
+
+        case 5:
+            break;
+
+        case 6:
+            break;
+
+        case 7:
+            break;
+
+        case 14:
+            break;
+        
+        default: //Unknown Instruction
+            break;
+    }
+}
+
+void Chip8::_9(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_A(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_B(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_C(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_D(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_E(uint16_t _12LSb){
+
+   
+}
+
+void Chip8::_F(uint16_t _12LSb){
+
+   
 }

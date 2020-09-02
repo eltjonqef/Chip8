@@ -14,3 +14,11 @@ uint8_t Memory::getMemory(int index){
     
     return memory[index];
 }
+
+void Memory::setStack(int index, uint16_t value){
+    stack[index]=value;
+}
+
+uint16_t Memory::getStack(int index){
+    return stack[index];
+}

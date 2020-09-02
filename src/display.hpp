@@ -30,5 +30,6 @@ class Display{
 
     public:
         Display();
+        void ClearDisplay();
         uint8_t getFont(int i);
 };

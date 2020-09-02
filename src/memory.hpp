@@ -13,4 +13,6 @@ class Memory{
         Memory();
         void setMemory(int index, uint8_t value);
         uint8_t getMemory(int index);
+        void setStack(int index, uint16_t value);
+        uint16_t getStack(int index);
 };
