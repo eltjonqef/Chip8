@@ -34,3 +34,11 @@ void CPU::setRegister(int index, uint8_t value){
 uint8_t CPU::getRegister(int index){
     return V[index];
 }
+
+void CPU::setI(uint16_t i){
+    i=i;
+}
+
+uint16_t CPU::getI(){
+    return i;
+}

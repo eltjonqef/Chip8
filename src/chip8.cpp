@@ -23,6 +23,7 @@ Chip8::Chip8(std::string filename){
     opcodes[13]=&Chip8::_D;
     opcodes[14]=&Chip8::_E;
     opcodes[15]=&Chip8::_F;
+    srand (time(NULL));
 }
 
 void Chip8::Load(std::string filename){
@@ -60,9 +61,8 @@ void Chip8::_0(uint16_t _12LSb){
 
         case 0xE:
             std::cout<<"Return"<<std::endl;
-            cpu.setSP(cpu.getSP()-1);
             cpu.setPC(memory.getStack(cpu.getSP()));
-            cpu.setPC(cpu.getPC()+2);
+            cpu.setSP(cpu.getSP()-1);
             break;
         
         default:
@@ -88,7 +88,7 @@ void Chip8::_2(uint16_t _12LSb){
 void Chip8::_3(uint16_t _12LSb){
 
     std::cout<<"Skip if equal (byte)"<<std::endl;
-    if(((_12LSb & 0x0F00) >> 8)==(_12LSb & 0x00FF)){
+    if(cpu.getRegister((_12LSb & 0x0F00) >> 8)==(_12LSb & 0x00FF)){
         cpu.setPC(cpu.getPC()+4);
     }
     else{
@@ -99,7 +99,7 @@ void Chip8::_3(uint16_t _12LSb){
 void Chip8::_4(uint16_t _12LSb){
 
     std::cout<<"Skip if not equal (byte)"<<std::endl;
-    if(((_12LSb & 0x0F00) >> 8)!=(_12LSb & 0x00FF)){
+    if(cpu.getRegister((_12LSb & 0x0F00) >> 8)!=(_12LSb & 0x00FF)){
         cpu.setPC(cpu.getPC()+4);
     }
     else{
@@ -110,7 +110,7 @@ void Chip8::_4(uint16_t _12LSb){
 void Chip8::_5(uint16_t _12LSb){
 
     std::cout<<"Skip if not equal (register)"<<std::endl;
-    if(((_12LSb & 0x0F00) >> 8)!=((_12LSb & 0x00F0) >> 4)){
+    if(cpu.getRegister((_12LSb & 0x0F00) >> 8)==cpu.getRegister((_12LSb & 0x00F0) >> 4)){
         cpu.setPC(cpu.getPC()+4);
     }
     else{
@@ -136,60 +136,83 @@ void Chip8::_8(uint16_t _12LSb){
 
     switch(_12LSb & 0x000F){
         case 0:
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x00F0) >> 4));
             break;
 
         case 1:
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) | cpu.getRegister((_12LSb & 0x00F0) >> 4));
             break;
 
         case 2:
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) & cpu.getRegister((_12LSb & 0x00F0) >> 4));
             break;
 
         case 3:
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) ^ cpu.getRegister((_12LSb & 0x00F0) >> 4));
             break;
 
         case 4:
+            cpu.setRegister(15, ((uint16_t)cpu.getRegister((_12LSb & 0x0F00) >> 8) + (uint16_t)cpu.getRegister((_12LSb & 0x00F0) >> 4))>255);
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, ((uint16_t)cpu.getRegister((_12LSb & 0x0F00) >> 8) + (uint16_t)cpu.getRegister((_12LSb & 0x00F0) >> 4)) & 0x00FF);
             break;
 
         case 5:
+            cpu.setRegister(15, cpu.getRegister((_12LSb & 0x0F00) >> 8) > cpu.getRegister((_12LSb & 0x00F0) >> 4));
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) - cpu.getRegister((_12LSb & 0x00F0) >> 4));
             break;
 
         case 6:
+            cpu.setRegister(15, cpu.getRegister(15) & 0x1);
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) >> 1);
             break;
 
         case 7:
+            cpu.setRegister(15, cpu.getRegister((_12LSb & 0x0F00) >> 8) < cpu.getRegister((_12LSb & 0x00F0) >> 4));
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x00F0) >> 4) - cpu.getRegister((_12LSb & 0x0F00) >> 8));
             break;
 
         case 14:
+            cpu.setRegister(15, cpu.getRegister((_12LSb & 0x0F00) >> 8) & 0x80);
+            cpu.setRegister((_12LSb & 0x0F00) >> 8, cpu.getRegister((_12LSb & 0x0F00) >> 8) << 1);
             break;
         
         default: //Unknown Instruction
+            std::cout<<"Unknown Instruction"<<std::endl;
             break;
     }
+    cpu.setPC(cpu.getPC()+2);
 }
 
 void Chip8::_9(uint16_t _12LSb){
 
-   
+    if(cpu.getRegister((_12LSb & 0x0F00) >> 8)!=cpu.getRegister((_12LSb & 0x00F0) >> 4)){
+        cpu.setPC(cpu.getPC()+4);
+    }
+    else{
+        cpu.setPC(cpu.getPC()+2);
+    }
 }
 
 void Chip8::_A(uint16_t _12LSb){
 
-   
+    cpu.setI(_12LSb);
+    cpu.setPC(cpu.getPC()+2);
 }
 
 void Chip8::_B(uint16_t _12LSb){
 
-   
+    cpu.setPC(_12LSb + cpu.getRegister(0));
 }
 
 void Chip8::_C(uint16_t _12LSb){
 
-   
+    cpu.setRegister((_12LSb & 0x0F00) >> 8, (rand() % 256) & (_12LSb & 0x00FF));
+    cpu.setPC(cpu.getPC()+2);
 }
 
 void Chip8::_D(uint16_t _12LSb){
 
-   
+    
 }
 
 void Chip8::_E(uint16_t _12LSb){

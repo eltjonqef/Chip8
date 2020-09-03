@@ -24,4 +24,6 @@ class CPU{
         void executeOpcode(uint16_t opcode);
         void setRegister(int index, uint8_t value);
         uint8_t getRegister(int index);
+        void setI(uint16_t i);
+        uint16_t getI();
 };
