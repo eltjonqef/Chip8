@@ -19,7 +19,6 @@ void Chip8::Load(std::string filename){
         i++;
     }
     file.close();
-    cpu->setPC(542);
     Cycle();
 }
 

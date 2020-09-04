@@ -60,6 +60,22 @@ uint16_t CPU::getI(){
     return i;
 }
 
+void CPU::setDelayTimer(uint8_t delay_timer){
+    delay_timer=delay_timer;
+}
+
+uint8_t CPU::getDelayTimer(){
+    return delay_timer;
+}
+
+void CPU::setSoundTimer(uint8_t sound_timer){
+    sound_timer=sound_timer;
+}
+
+uint8_t CPU::getSoundTimer(){
+    return sound_timer;
+}
+
 void CPU::executeOpcode(uint16_t opcode, Display *display, Memory *memory){
     (this->*opcodes[(opcode & 0xF000) >>12])(opcode & 0x0FFF, display, memory);
 }
@@ -104,10 +120,9 @@ void CPU::_3(uint16_t _12LSb, Display *display, Memory *memory){
     std::cout<<"Skip if equal (byte)"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)==(_12LSb & 0x00FF)){
         setPC(getPC()+4);
+        return;
     }
-    else{
-        setPC(getPC()+2);
-    }
+    setPC(getPC()+2);
 }
 
 void CPU::_4(uint16_t _12LSb, Display *display, Memory *memory){
@@ -115,10 +130,9 @@ void CPU::_4(uint16_t _12LSb, Display *display, Memory *memory){
     std::cout<<"Skip if not equal (byte)"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)!=(_12LSb & 0x00FF)){
         setPC(getPC()+4);
+        return;
     }
-    else{
-        setPC(getPC()+2);
-    }
+    setPC(getPC()+2);
 }
 
 void CPU::_5(uint16_t _12LSb, Display *display, Memory *memory){
@@ -126,10 +140,9 @@ void CPU::_5(uint16_t _12LSb, Display *display, Memory *memory){
     std::cout<<"Skip if not equal (register)"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)==getRegister((_12LSb & 0x00F0) >> 4)){
         setPC(getPC()+4);
+        return;
     }
-    else{
-        setPC(getPC()+2);
-    }
+    setPC(getPC()+2);
 }
 
 void CPU::_6(uint16_t _12LSb, Display *display, Memory *memory){
@@ -201,10 +214,9 @@ void CPU::_9(uint16_t _12LSb, Display *display, Memory *memory){
 
     if(getRegister((_12LSb & 0x0F00) >> 8)!=getRegister((_12LSb & 0x00F0) >> 4)){
         setPC(getPC()+4);
+        return;
     }
-    else{
-        setPC(getPC()+2);
-    }
+    setPC(getPC()+2);
 }
 
 void CPU::_A(uint16_t _12LSb, Display *display, Memory *memory){
@@ -226,15 +238,57 @@ void CPU::_C(uint16_t _12LSb, Display *display, Memory *memory){
 
 void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory){
 
-    
+    //DISPLAY
 }
 
 void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory){
 
-   
+    //KEYBOARD
 }
 
 void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory){
 
-   
+    switch(_12LSb & 0x00FF){
+
+        case 0x07:
+            setRegister((_12LSb & 0x0F00)>>8, delay_timer);
+            break;
+
+        case 0x0A:
+            //KEYBOARD
+            break;
+        
+        case 0x15:
+            setDelayTimer(getRegister((_12LSb & 0x0F00)>>8));
+            break;
+        
+        case 0x18:
+            setSoundTimer(getRegister((_12LSb & 0x0F00)>>8));
+            break;
+
+        case 0x1E:
+            setI(getI()+getRegister((_12LSb & 0x0F00)>>8));
+            break;
+
+        case 0x29:
+            //DISPLAY
+            break;
+
+        case 0x33:
+            //DUNNO
+            break;
+
+        case 0x55:
+            for(int i=0; i<((_12LSb & 0x0F00)>>8); i++){
+                memory->setMemory(getI()+i, getRegister(i));
+            }
+            break;
+
+        case 0x65:
+            for(int i=0; i<((_12LSb & 0x0F00)>>8); i++){
+                setRegister(i, memory->getMemory(getI()+i));
+            }
+            break;
+    }
+    setPC(getPC()+2);
 }

@@ -46,4 +46,8 @@ class CPU{
         void setI(uint16_t i);
         uint16_t getI();
         void executeOpcode(uint16_t opcode, Display *display, Memory *memory);
+        void setDelayTimer(uint8_t delay_timer);
+        uint8_t getDelayTimer();
+        void setSoundTimer(uint8_t sound_timer);
+        uint8_t getSoundTimer();
 };
