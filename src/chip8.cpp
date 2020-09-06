@@ -11,15 +11,19 @@ Chip8::Chip8(std::string filename){
 
 void Chip8::Load(std::string filename){
 
-    std::ifstream file(filename, std::ios::binary);
+    std::ifstream file(filename, std::ios::binary | std::ios::ate);
     uint8_t byte;
-    int i=0;
-    while(file>>byte){
-        memory->setMemory(0x200+i, byte);
-        i++;
-    }
+    int size=(int)file.tellg();
+    unsigned char buffer[size];
+    file.seekg(0, file.beg);
+    file.read((char*)(&buffer[0]), size);
     file.close();
-    Cycle();
+    for(int i=0; i<size; i++){
+        memory->setMemory(0x200+i, buffer[i]);
+    }
+    while(1){
+        Cycle();
+    }
 }
 
 void Chip8::Cycle(){
