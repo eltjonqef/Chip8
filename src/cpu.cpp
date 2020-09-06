@@ -60,16 +60,16 @@ uint16_t CPU::getI(){
     return i;
 }
 
-void CPU::setDelayTimer(uint8_t delay_timer){
-    delay_timer=delay_timer;
+void CPU::setDelayTimer(uint8_t _delay_timer){
+    delay_timer=_delay_timer;
 }
 
 uint8_t CPU::getDelayTimer(){
     return delay_timer;
 }
 
-void CPU::setSoundTimer(uint8_t sound_timer){
-    sound_timer=sound_timer;
+void CPU::setSoundTimer(uint8_t _sound_timer){
+    sound_timer=_sound_timer;
 }
 
 uint8_t CPU::getSoundTimer(){
@@ -253,6 +253,15 @@ void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory){
 
     //DISPLAY
     std::cout<<"DXYN"<<std::endl;
+    uint8_t sprite;
+    V[15]=0;
+    for(int i=0; i<_12LSb & 0x000F; i++){
+        sprite=memory->getMemory(i+getI());
+        if(((display->getGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)))) ^ sprite) | ((display->getGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)))) ^ 0xFF) !=0xFF){
+            V[15]=1;
+        }
+        display->setGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)), ((display->getGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)))) ^ sprite));
+    }
     setPC(getPC()+2);
 }
 

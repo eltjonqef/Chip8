@@ -2,13 +2,6 @@
 
 Display::Display(){
     ClearDisplay();
-    /*if (!al_init()) {
-		std::cout<<"failed to create display!"<<std::endl;
-		exit(-1);
-	}
-    display=al_create_display(600, 600);
-    al_rest(10.0);
-    al_destroy_display(display);*/
 }
 
 void Display::ClearDisplay(){
@@ -17,4 +10,12 @@ void Display::ClearDisplay(){
 
 uint8_t Display::getFont(int i){
     return fonts[i];
+}
+
+uint8_t Display::getGraphicsBuffer(int i){
+    return graphics_buffer[i];
+}
+
+void Display::setGraphicsBuffer(int index, uint8_t value){
+    graphics_buffer[index]=value;
 }

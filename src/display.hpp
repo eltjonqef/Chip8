@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <iostream>
-#include <allegro5/allegro.h>
+
 class Display{
 
     private:
@@ -32,4 +32,6 @@ class Display{
         Display();
         void ClearDisplay();
         uint8_t getFont(int i);
+        uint8_t getGraphicsBuffer(int i);
+        void setGraphicsBuffer(int index, uint8_t value);
 };

@@ -21,9 +21,6 @@ void Chip8::Load(std::string filename){
     for(int i=0; i<size; i++){
         memory->setMemory(0x200+i, buffer[i]);
     }
-    while(1){
-        Cycle();
-    }
 }
 
 void Chip8::Cycle(){
@@ -32,3 +29,7 @@ void Chip8::Cycle(){
     cpu->executeOpcode(opcode, display, memory);
 }
 
+
+Display& Chip8::getDisplay(){
+    return *display;
+}
