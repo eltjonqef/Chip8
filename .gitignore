@@ -2,3 +2,5 @@
 .vscode/
 
 chip8
+
+*.ch8
