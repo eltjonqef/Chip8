@@ -76,11 +76,11 @@ uint8_t CPU::getSoundTimer(){
     return sound_timer;
 }
 
-void CPU::executeOpcode(uint16_t opcode, Display *display, Memory *memory){
-    (this->*opcodes[(opcode & 0xF000) >>12])(opcode & 0x0FFF, display, memory);
+void CPU::executeOpcode(uint16_t opcode, Display *display, Memory *memory, Keyboard *keyboard){
+    (this->*opcodes[(opcode & 0xF000) >>12])(opcode & 0x0FFF, display, memory, keyboard);
 }
 
-void CPU::_0(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_0(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     switch(_12LSb & 0x000F){
         case 0x0:
@@ -101,13 +101,13 @@ void CPU::_0(uint16_t _12LSb, Display *display, Memory *memory){
     }
 }
 
-void CPU::_1(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_1(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"1NNN"<<std::endl;
     setPC(_12LSb);
 }
 
-void CPU::_2(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_2(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"2NNN"<<std::endl;
     setSP(getSP()+1);
@@ -115,7 +115,7 @@ void CPU::_2(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(_12LSb);
 }
 
-void CPU::_3(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_3(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"3XKK"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)==(_12LSb & 0x00FF)){
@@ -125,7 +125,7 @@ void CPU::_3(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_4(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_4(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"4XKK"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)!=(_12LSb & 0x00FF)){
@@ -135,7 +135,7 @@ void CPU::_4(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_5(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_5(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"5XY0"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)==getRegister((_12LSb & 0x00F0) >> 4)){
@@ -145,21 +145,21 @@ void CPU::_5(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_6(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_6(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"6XKK"<<_12LSb<<std::endl;
     setRegister((_12LSb & 0x0F00)>>8, _12LSb & 0x00FF);
     setPC(getPC()+2);
 }
 
-void CPU::_7(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_7(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"7XKK"<<_12LSb<<std::endl;
     setRegister((_12LSb & 0x0F00)>>8, getRegister((_12LSb & 0x0F00)>>8)+(_12LSb & 0x00FF));
     setPC(getPC()+2);
 }
 
-void CPU::_8(uint16_t _12LSb, Display *display, Memory *memory){ 
+void CPU::_8(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){ 
 
     switch(_12LSb & 0x000F){
         case 0:
@@ -219,7 +219,7 @@ void CPU::_8(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_9(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_9(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"9XY0"<<std::endl;
     if(getRegister((_12LSb & 0x0F00) >> 8)!=getRegister((_12LSb & 0x00F0) >> 4)){
@@ -229,27 +229,27 @@ void CPU::_9(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_A(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_A(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"ANNN"<<_12LSb<<std::endl;
     setI(_12LSb);
     setPC(getPC()+2);
 }
 
-void CPU::_B(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_B(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"BNNN"<<std::endl;
     setPC(_12LSb + getRegister(0));
 }
 
-void CPU::_C(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_C(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     std::cout<<"CXKK"<<std::endl;
     setRegister((_12LSb & 0x0F00) >> 8, (rand() % 256) & (_12LSb & 0x00FF));
     setPC(getPC()+2);
 }
 
-void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     //DISPLAY
     std::cout<<"DXYN"<<std::endl;
@@ -265,14 +265,31 @@ void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory){
     setPC(getPC()+2);
 }
 
-void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     //KEYBOARD
-    std::cout<<"E"<<std::endl;
+    std::cout<<"E: ";
+    switch(_12LSb & 0x00FF){
+        case 0x9E:
+            std::cout<<"D: "<<((_12LSb & 0x0F00) >> 8)<<std::endl;
+            if(keyboard->getKey((_12LSb & 0x0F00) >> 8)){
+                setPC(getPC()+4);
+                return;
+            }
+            break;
+        
+        case 0xA1:
+            std::cout<<"U: "<<((_12LSb & 0x0F00) >> 8)<<std::endl;
+            if(!keyboard->getKey((_12LSb & 0x0F00) >> 8)){
+                setPC(getPC()+4);
+                return;
+            }
+            break;
+    }
     setPC(getPC()+2);
 }
 
-void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory){
+void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     switch(_12LSb & 0x00FF){
 
