@@ -11,9 +11,9 @@
 class Chip8{
 
     private:
-        Display *display= new Display();
-        Memory *memory= new Memory();
-        CPU *cpu= new CPU();
+        Display *display;
+        Memory *memory;
+        CPU *cpu;
         void Load(std::string filename);
 
     public:

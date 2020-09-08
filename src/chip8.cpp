@@ -3,6 +3,9 @@
 
 Chip8::Chip8(std::string filename){
 
+    display= new Display();
+    memory= new Memory();
+    cpu= new CPU();
     for(int i=0; i<80; i++){
         memory->setMemory(i, display->getFont(i));
     }
@@ -20,6 +23,20 @@ void Chip8::Load(std::string filename){
     file.close();
     for(int i=0; i<size; i++){
         memory->setMemory(0x200+i, buffer[i]);
+    }
+    bool isRunning=true;
+    SDL_Event event;
+    while(isRunning){
+        SDL_PollEvent(&event);
+        switch(event.type){
+            case SDL_QUIT:
+                isRunning=false;
+                break;
+            default:
+                SDL_RenderClear(display->getRenderer());
+                SDL_RenderPresent(display->getRenderer());
+                break;
+        }
     }
 }
 

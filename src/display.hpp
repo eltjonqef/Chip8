@@ -2,12 +2,12 @@
 #include <stdint.h>
 #include <string.h>
 #include <iostream>
-
+#include <SDL2/SDL.h>
 class Display{
 
     private:
-        //ALLEGRO_DISPLAY* display;
-        //ALLEGRO_BITMAP* bitmap;
+        SDL_Window *window;
+        SDL_Renderer *renderer;
         uint8_t graphics_buffer[32*64];
         uint8_t fonts[80]={
             0xF0, 0x90, 0x90, 0x90, 0xF0,
@@ -27,11 +27,14 @@ class Display{
             0xF0, 0x80, 0xF0, 0x80, 0xF0,
             0xF0, 0x80, 0xF0, 0x80, 0x80 
         };
+        bool initSDL();
 
     public:
         Display();
+        ~Display();
         void ClearDisplay();
         uint8_t getFont(int i);
         uint8_t getGraphicsBuffer(int i);
         void setGraphicsBuffer(int index, uint8_t value);
+        SDL_Renderer* getRenderer();
 };
