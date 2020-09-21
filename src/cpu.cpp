@@ -144,19 +144,16 @@ void CPU::_8(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
             break;
 
         case 6:
-            std::cout<<"8XY6"<<std::endl;
             V[0xF] &= 0x1;
             V[0xF] >>= 1;
             break;
 
         case 7:
-            std::cout<<"8XY7"<<std::endl;
             V[0xF] = (V[x] < V[y]);
             V[x] = V[y] - V[x];
             break;
 
         case 14:
-            std::cout<<"8XYE"<<std::endl;
             V[0xF]=V[x] & 0x80;
             V[x]= V[x] <<1;
             break;
@@ -202,7 +199,6 @@ void CPU::_C(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
 void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     //DISPLAY
-    std::cout<<"DXYN"<<std::endl;
     uint8_t sprite;
     display->draw=true;
     V[0xF]=0;
@@ -234,14 +230,14 @@ void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
     uint8_t x=(_12LSb & 0x0F00) >> 8;
     switch(_12LSb & 0x00FF){
         case 0x9E:
-            if(keyboard->keys[x]){
+            if(keyboard->keyboard[V[x]]){std::cout<<"keyboar\n";
                 pc+=4;
                 return;
             }
             break;
         
         case 0xA1:
-            if(!keyboard->keys[x]){
+            if(!keyboard->keyboard[V[x]]){std::cout<<"kerwr\n";
                 pc+=4;
                 return;
             }
@@ -256,15 +252,26 @@ void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
 void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     uint8_t x=(_12LSb & 0x0F00)>>8;
-    std::cout<<"tetetetete "<<(_12LSb & 0x00FF)<<std::endl;
     switch(_12LSb & 0x00FF){
 
         case 0x07:
             V[x]=delay_timer;
             break;
 
-        case 0x0A:
+        case 0x0A:{
             //KEYBOARD
+                std::cout<<"not imple"<<std::endl;
+                bool pressed=false;
+                for(int j=0; j<16; j++){
+                    if(keyboard->keyboard[j]!=0){
+                        V[x]=j;
+                        pressed=true;
+                    }
+                }
+                if(!pressed){
+                    return;
+                }
+            }
             break;
         
         case 0x15:
@@ -276,7 +283,6 @@ void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
             break;
 
         case 0x1E:
-            std::cout<<"FX1E"<<std::endl;
             i+=V[x];
             break;
 

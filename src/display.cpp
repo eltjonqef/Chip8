@@ -4,6 +4,7 @@ Display::Display(){
     ClearDisplay();
     window=NULL;
     renderer=NULL;
+    texture=NULL;
     draw=false;
     initSDL();
 }
@@ -25,7 +26,7 @@ bool Display::initSDL(){
         return 0;
     }
     std::cout <<"Initialized SDL succesfully!" << std::endl;
-    window=SDL_CreateWindow("Chip8", 0, 0, 500, 400, SDL_WINDOW_SHOWN); 
+    window=SDL_CreateWindow("Chip8", 0, 0, 1024, 500, SDL_WINDOW_SHOWN); 
     if(!window){
         std::cout << "SDL could not create window! SDL Error: " << SDL_GetError() << std::endl;
         return 0;
@@ -37,5 +38,10 @@ bool Display::initSDL(){
         return 0;
     }
     std::cout <<"SDL created renderer succesfully!" << std::endl;
+    SDL_RenderSetLogicalSize(renderer, 1024, 500);
+    texture=SDL_CreateTexture(renderer,
+                SDL_PIXELFORMAT_ARGB8888,
+                SDL_TEXTUREACCESS_STREAMING,
+                64, 32);
     return 1;
 }

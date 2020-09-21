@@ -26,14 +26,26 @@ void Chip8::Load(std::string filename){
         memory->memory[0x200+i]= buffer[i];
     }
     bool isRunning=true;
-    SDL_RenderSetLogicalSize(display->renderer, 1024, 512);
 
-        // Create texture that stores frame buffer
-        SDL_Texture* sdlTexture = SDL_CreateTexture(display->renderer,
-                SDL_PIXELFORMAT_ARGB8888,
-                SDL_TEXTUREACCESS_STREAMING,
-                64, 32);
     SDL_Event event;
+    uint8_t KEYMAP[16] = {
+    SDLK_x, // 0
+    SDLK_1, // 1
+    SDLK_2, // 2
+    SDLK_3, // 3
+    SDLK_q, // 4
+    SDLK_w, // 5
+    SDLK_e, // 6
+    SDLK_a, // 7
+    SDLK_s, // 8
+    SDLK_d, // 9
+    SDLK_z, // A
+    SDLK_c, // B
+    SDLK_4, // C
+    SDLK_r, // D
+    SDLK_f, // E
+    SDLK_v  // F
+};
     uint32_t pixels[2048];
     while(isRunning){
         SDL_PollEvent(&event);
@@ -41,11 +53,19 @@ void Chip8::Load(std::string filename){
             case SDL_QUIT:
                 isRunning=false;
                 break;
-            case SDL_KEYUP:
-                keyboard->keys[event.key.keysym.sym]=0;
-                break;
             case SDL_KEYDOWN:
-                keyboard->keys[event.key.keysym.sym]=1;
+                for(int i=0; i<16; i++){
+                    if(event.key.keysym.sym==KEYMAP[i]){
+                        keyboard->keyboard[i]=1;
+                    }
+                }
+                break;
+            case SDL_KEYUP:
+                for(int i=0; i<16; i++){
+                    if(event.key.keysym.sym==KEYMAP[i]){
+                        keyboard->keyboard[i]=0;
+                    }
+                }
                 break;
             default:
                 break;
@@ -57,12 +77,12 @@ void Chip8::Load(std::string filename){
                 uint8_t p=display->graphics_buffer[i];
                 pixels[i]= (0x00FFFFFF * p) | 0xFF000000;
             }
-            SDL_UpdateTexture(sdlTexture, NULL, pixels, 64 * sizeof(Uint32));
-            // Clear screen and render
+            SDL_UpdateTexture(display->texture, NULL, pixels, 64 * sizeof(Uint32));
             SDL_RenderClear(display->renderer);
-            SDL_RenderCopy(display->renderer, sdlTexture, NULL, NULL);
+            SDL_RenderCopy(display->renderer, display->texture, NULL, NULL);
             SDL_RenderPresent(display->renderer);
         }
+        SDL_Delay(32);
         //std::this_thread::sleep_for(std::chrono::milliseconds(120));
     }
 }
@@ -70,6 +90,8 @@ void Chip8::Load(std::string filename){
 void Chip8::Cycle(){
 
     uint16_t opcode = memory->memory[cpu->pc]<< 8 | memory->memory[cpu->pc+1];
-    std::cout<<"oppp "<< opcode<<std::endl;
     cpu->executeOpcode(opcode, display, memory, keyboard);
+    if(cpu->delay_timer>0){
+        cpu->delay_timer--;
+    }
 }

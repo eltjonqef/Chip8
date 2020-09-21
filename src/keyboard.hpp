@@ -2,11 +2,12 @@
 #include <stdint.h>
 #include <string.h>
 #include <map>
+#include <SDL2/SDL.h>
 
 class Keyboard
 {
     public:
-        std::map<int, bool> keys;
+        uint8_t keyboard[16];
         Keyboard(/* args */);
         ~Keyboard();
 };

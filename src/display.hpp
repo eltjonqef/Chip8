@@ -8,6 +8,7 @@ class Display{
     public:
         SDL_Window *window;
         SDL_Renderer *renderer;
+        SDL_Texture* texture;
         uint8_t graphics_buffer[32*64];
         bool draw;
         uint8_t fonts[80]={
