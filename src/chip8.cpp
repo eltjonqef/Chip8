@@ -23,7 +23,7 @@ void Chip8::Load(std::string filename){
     file.read((char*)(&buffer[0]), size);
     file.close();
     for(int i=0; i<size; i++){
-        memory->memory[0x200+i, buffer[i]];
+        memory->memory[0x200+i]= buffer[i];
     }
     bool isRunning=true;
     SDL_RenderSetLogicalSize(display->renderer, 1024, 512);
@@ -69,6 +69,7 @@ void Chip8::Load(std::string filename){
 
 void Chip8::Cycle(){
 
-    uint16_t opcode = memory->memory[(cpu->pc << 8) | memory->memory[cpu->pc+1]];
+    uint16_t opcode = memory->memory[cpu->pc]<< 8 | memory->memory[cpu->pc+1];
+    std::cout<<"oppp "<< opcode<<std::endl;
     cpu->executeOpcode(opcode, display, memory, keyboard);
 }

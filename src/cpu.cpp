@@ -40,8 +40,8 @@ void CPU::_0(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
             break;
 
         case 0x0EE:
-            pc=memory->stack[sp];
             sp--;
+            pc=memory->stack[sp];          
             break;
         
         default:
@@ -206,18 +206,18 @@ void CPU::_D(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
     uint8_t sprite;
     display->draw=true;
     V[0xF]=0;
-    /*for(int yline=0; yline<(_12LSb & 0x00F); yline++){
-        pixel=memory->getMemory(getI() + yline);
+    for(int yline=0; yline<(_12LSb & 0x00F); yline++){
+        sprite=memory->memory[i + yline];
         for(int xline=0; xline<8; xline++){
-            if((pixel & (0x80 >> xline)) !=0){
-                if(display->getGraphicsBuffer(getRegister(((_12LSb & 0xF00)>> 8)+xline+(((_12LSb & 0x0F0)>> 4) +yline)*64))==1){
-                    setRegister(15, 1);
+            if((sprite & (0x80 >> xline)) !=0){
+                if(display->graphics_buffer[V[((_12LSb & 0xF00)>> 8)+xline+(((_12LSb & 0x0F0)>> 4) +yline)*64]]==1){
+                    V[0xF]=1;
                 }
-                display->setGraphicsBuffer(((_12LSb & 0xF00)>> 8)+xline+(((_12LSb & 0x0F0)>> 4) +yline)*64, display->getGraphicsBuffer(((_12LSb & 0xF00)>> 8)+xline+(((_12LSb & 0x0F0)>> 4) +yline)*64) ^ 1);
+                display->graphics_buffer[((_12LSb & 0xF00)>> 8)+xline+(((_12LSb & 0x0F0)>> 4) +yline)*64] ^= 1;
             }
         }
     }
-    
+    /*
     for(int i=0; i<_12LSb & 0x000F; i++){
         sprite=memory->getMemory(i+getI());
         if(((display->getGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)))) ^ sprite) | ((display->getGraphicsBuffer(((_12LSb & 0x0F00) >>8) + (((_12LSb & 0x00F0) >>4)))) ^ 0xFF) !=0xFF){
@@ -256,6 +256,7 @@ void CPU::_E(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
 void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboard){
 
     uint8_t x=(_12LSb & 0x0F00)>>8;
+    std::cout<<"tetetetete "<<(_12LSb & 0x00FF)<<std::endl;
     switch(_12LSb & 0x00FF){
 
         case 0x07:
@@ -284,7 +285,7 @@ void CPU::_F(uint16_t _12LSb, Display *display, Memory *memory, Keyboard *keyboa
             break;
 
         case 0x33:
-            memory->memory[i]=V[x] /100;
+            memory->memory[i]=V[x/100] /100;
             memory->memory[i]=(V[x] /10) % 10;
             memory->memory[i]=V[x] % 10;
             break;
