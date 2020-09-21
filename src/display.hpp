@@ -5,10 +5,11 @@
 #include <SDL2/SDL.h>
 class Display{
 
-    private:
+    public:
         SDL_Window *window;
         SDL_Renderer *renderer;
         uint8_t graphics_buffer[32*64];
+        bool draw;
         uint8_t fonts[80]={
             0xF0, 0x90, 0x90, 0x90, 0xF0,
             0x20, 0x60, 0x20, 0x20, 0x70,
@@ -28,13 +29,7 @@ class Display{
             0xF0, 0x80, 0xF0, 0x80, 0x80 
         };
         bool initSDL();
-
-    public:
         Display();
         ~Display();
         void ClearDisplay();
-        uint8_t getFont(int i);
-        uint8_t getGraphicsBuffer(int i);
-        void setGraphicsBuffer(int index, uint8_t value);
-        SDL_Renderer* getRenderer();
 };

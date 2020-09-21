@@ -4,6 +4,7 @@ Display::Display(){
     ClearDisplay();
     window=NULL;
     renderer=NULL;
+    draw=false;
     initSDL();
 }
 
@@ -37,21 +38,4 @@ bool Display::initSDL(){
     }
     std::cout <<"SDL created renderer succesfully!" << std::endl;
     return 1;
-}
-
-uint8_t Display::getFont(int i){
-    return fonts[i];
-}
-
-uint8_t Display::getGraphicsBuffer(int i){
-    return graphics_buffer[i];
-}
-
-void Display::setGraphicsBuffer(int index, uint8_t value){
-    graphics_buffer[index]=value;
-}
-
-SDL_Renderer* Display::getRenderer(){
-
-    return renderer;
 }

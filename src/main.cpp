@@ -7,7 +7,7 @@ SDL_Window *window=NULL;
 SDL_Renderer *renderer=NULL;
 int main(){
 
-    Chip8 *chip8 = new Chip8("Brix [Andreas Gustafsson, 1990].ch8");
+    Chip8 *chip8 = new Chip8("test_opcode.ch8");
 
     return 0;
 }

@@ -5,13 +5,8 @@
 
 class Keyboard
 {
-private:
-   
-    std::map<int, bool> keys;
-public:
-    Keyboard(/* args */);
-    ~Keyboard();
-    void setKey(int index);
-    void unsetKey(int index);
-    bool getKey(int index);
+    public:
+        std::map<int, bool> keys;
+        Keyboard(/* args */);
+        ~Keyboard();
 };

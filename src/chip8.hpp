@@ -9,18 +9,16 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <chrono>
+#include <thread>
 class Chip8{
 
-    private:
+    public:
         Display *display;
         Memory *memory;
         CPU *cpu;
         Keyboard *keyboard;
         void Load(std::string filename);
-
-    public:
         Chip8(std::string filename); 
         void Cycle();
-        Display &getDisplay();
-        Keyboard &getKeyboard();
 };
